@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="script.js"></script>
+    <script src="background.js"></script>
+    <script src="trung.js"></script>
+    <script src="gio.js"></script>
+    <link rel="stylesheet" href="css.css">
+</head>
+<body style="background: cornflowerblue">
+<button onclick="start()" id="reset" ><img src="images/reset.png" alt="" width="200"></button>
+<canvas
+        id="myCanvas"
+        width="568"
+        height="630"
+        style="border: solid 2px; display: block;margin-left: auto;margin-right: auto">
+</canvas>
+<script>
+    const gioWidth = 100;
+    const gioHeight = 50;
+    const trungWidth = 50;
+    const trungHeight = 50;
+
+    let heart = 3;
+    let score = 0;
+    let kiemtra = false;
+    let canvas = document.getElementById("myCanvas");
+    let ctx = canvas.getContext('2d');
+    let myChicken = new Chicken(0, 0, 150, 100, 'images/chicken.png');
+    let background = new Background(0, 0, 568, 630, 'images/fram1.jpg');
+    let trung = new Trung(myChicken.x, myChicken.y, 50, 50, 3, 'images/trung.png');
+    let myGio = new Gio(220, 560, 100, 50, 25, 'images/giotrung.png');
+    myGio.showGio(ctx);
+    myChicken.drawChicken(ctx);
+
+    let id = requestAnimationFrame(chickenStart)
+
+    function chickenStart() {
+        document.getElementById("reset").style.display="none"
+        kiemTraVaCham()
+        clearCanvas()
+        updateCanvas()
+        life()
+        if (myChicken._x > 568) {
+            myChicken._x = 0;
+        }
+        myChicken.moveRight();
+        moveTrung(myChicken.x);
+        id = requestAnimationFrame(chickenStart)
+        if (kiemtra === false && trung.y === 600) {
+            heart -=1
+            if (heart===0) {
+                cancelAnimationFrame(id)
+                Stop();
+                restartButton();
+            }
+        }
+    }
+
+    function updateCanvas() {
+
+        clearCanvas();
+        background.showBackground(ctx);
+        myChicken.drawChicken(ctx);
+        trung.showTrung(ctx);
+        myGio.showGio(ctx);
+        ctx.font = "20px Arial"
+        ctx.fillText("Score : " + score, 0, 50, 100, 50)
+    }
+    moveTrung()
+
+
+    function clearCanvas() {
+        ctx.clearRect(0, 0, 568, 640);
+    }
+
+    function upScore() {
+        score++;
+    }
+
+    function start(){
+        location.reload()
+        document.getElementById("reset").style.display="none"
+    }
+
+    function restartButton(){
+        document.getElementById("reset").style.display="block"
+
+    }
+
+    function life(){
+        ctx.font = "20px Arial"
+        ctx.fillText("Heart : " + heart,0,70,80,50)
+    }
+
+    function moveTrung(x) {
+        trung.moveDown(x + 50);
+        if (kiemtra === true) {
+            trung._speed += 0.2;
+            kiemtra = false;
+            getTrung()
+        }
+    }
+
+
+    function moveGio(event) {
+        switch (event.keyCode) {
+            case 37: {
+                if (myGio.x < 0) {
+                    return;
+                }
+                myGio.moveLeft();
+                break;
+            }
+            case 39: {
+                if (myGio.x + myGio.width > canvas.clientWidth) {
+                    return;
+                }
+                myGio.moveRight();
+                break;
+            }
+            case 38: {
+                if (myGio.y < 0) {
+                    return;
+                }
+                myGio.moveUp();
+                break;
+            }
+            case 40: {
+                if (myGio.y + myGio.height > canvas.clientHeight) {
+                    return;
+                }
+                myGio.moveDown();
+                break;
+            }
+        }
+
+
+    }
+
+    function getTrung() {
+        trung.x = myChicken.x
+        trung.y = Math.random() * 20
+
+    }
+
+    function Stop() {
+        let image = new Image();
+        image.src = "./images/gameover.png";
+        image.onload = function () {
+            ctx.drawImage(image, 90, 100, 350, 350);
+        }
+    }
+
+
+    function kiemTraVaCham() {
+        let Giox = [0, gioWidth / 2, gioWidth, gioWidth, 0]
+        let Gioy = [0, 0, 0, gioHeight / 2, gioHeight / 2]
+        let Trungx = [trungWidth / 2]
+        let Trungy = [trungHeight / 2]
+
+        for (let i = 0; i < Giox.length; i++) {
+            let xtr = trung.x + Trungx[0]
+            let ytr = trung.y + Trungy[0]
+            let xgio = myGio.x + Giox[i]
+            let ygio = myGio.y + Gioy[i]
+            let dis = Math.sqrt(Math.pow(xtr - xgio, 2) + Math.pow(ytr - ygio, 2));
+            if (dis <= trungHeight / 2) {
+                kiemtra = true;
+                upScore(+1)
+            }
+        }
+
+    }
+
+    window.addEventListener('keydown', moveGio);
+
+
+</script>
+</body>
+</html>
