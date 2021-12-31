@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="css.css">
 </head>
 <body style="background: cornflowerblue">
-<button onclick="start()" id="reset" ><img src="images/reset.png" alt="" width="200"></button>
+<button onclick="start()" id="reset"><img src="images/reset.png" alt="" width="200"></button>
 <canvas
         id="myCanvas"
         width="568"
@@ -38,9 +38,8 @@
     let id = requestAnimationFrame(chickenStart)
 
     function chickenStart() {
-        document.getElementById("reset").style.display="none"
+        document.getElementById("reset").style.display = "none"
         kiemTraVaCham()
-        clearCanvas()
         updateCanvas()
         life()
         if (myChicken._x > 568) {
@@ -49,9 +48,11 @@
         myChicken.moveRight();
         moveTrung(myChicken.x);
         id = requestAnimationFrame(chickenStart)
-        if (kiemtra === false && trung.y === 600) {
-            heart -=1
-            if (heart===0) {
+        if (kiemtra === false && trung.y > 600) {
+            heart -= 1
+            getTrung()
+
+            if (heart === 0) {
                 cancelAnimationFrame(id)
                 Stop();
                 restartButton();
@@ -66,9 +67,11 @@
         myChicken.drawChicken(ctx);
         trung.showTrung(ctx);
         myGio.showGio(ctx);
-        ctx.font = "20px Arial"
-        ctx.fillText("Score : " + score, 0, 50, 100, 50)
+        ctx.font = "italic bold 20pt Courier"
+        ctx.fillStyle ='black';
+        ctx.fillText("Score : " + score, 0, 40, 100, 50)
     }
+
     moveTrung()
 
 
@@ -80,19 +83,20 @@
         score++;
     }
 
-    function start(){
+    function start() {
         location.reload()
-        document.getElementById("reset").style.display="none"
+        document.getElementById("reset").style.display = "none"
     }
 
-    function restartButton(){
-        document.getElementById("reset").style.display="block"
+    function restartButton() {
+        document.getElementById("reset").style.display = "block"
 
     }
 
-    function life(){
-        ctx.font = "20px Arial"
-        ctx.fillText("Heart : " + heart,0,70,80,50)
+    function life() {
+        ctx.font = "italic bold 15pt Courier";
+        ctx.fillStyle = 'red';
+        ctx.fillText("Heart : " + heart, 0, 80, 80, 50);
     }
 
     function moveTrung(x) {

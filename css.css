@@ -1,0 +1,11 @@
+#reset{
+    position:relative;
+    background:url(/images/reset.png) no-repeat;
+    background-size: 50px;
+    top: 450px;
+    left: 550px;
+    width: 50px;
+    height: 50px;
+    border: none;
+    border-radius: 20px
+}
